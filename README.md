@@ -15,7 +15,7 @@ A weekly backup of your GitLab initiated by the cron at 3am each Saturday would
 look something like this (assuming BackupHub.py is in your PATH):
 
 ```
-0 3 * * 6 BackupHub.py --path ~/backup --token <your-gitlab-api-token> --website http://gitlab.com --move-aside --ignore-errors >> ~/backup/BackupHub.log
+0 3 * * 6 BackupHub.py --path ~/backup --token <your-gitlab-api-token> --website https://gitlab.com --move-aside --ignore-errors >> ~/backup/BackupHub.log
 ```
 
 or for GitHub:
