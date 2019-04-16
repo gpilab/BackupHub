@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Author: Nick Zwart
 # Date: 2016jun01
 #   Backup all the projects of a git-hub style website via git mirroring.
@@ -48,7 +48,7 @@ class GitLabAPI(GitWebsiteTypeAPI):
         self._gl.auth()
 
         # list all projects
-        self._projects = self._gl.projects.list(all=True)
+        self._projects = self._gl.projects.list(membership=True)
 
     def numProjects(self):
         return len(self._projects)
