@@ -129,7 +129,7 @@ class GitBareMirror:
             return True
 
         except AssertionError as err:
-            print('The given path does not contain a valid repo by:', err)
+            print('The given path does not contain a valid repo by:', err, file=open("/home/kcii/backup/BackupHub.log","a+"))
             return False
 
     def update(self):
@@ -138,7 +138,7 @@ class GitBareMirror:
         cmd.wait()
 
         assert cmd.returncode == 0, 'ERROR: git error'
-        print('SUCCESS (updated)')
+        print('SUCCESS (updated)', file=open("/home/kcii/backup/BackupHub.log","a+"))
 
     def createMirroredRepo(self):
 
@@ -149,10 +149,10 @@ class GitBareMirror:
             dirContents = str(os.listdir(parentPath)).encode('utf8')
             newNameExt = hashlib.md5(dirContents).hexdigest()
             newName = self._path+'_'+newNameExt+'_bu'
-            print('MOVING PATH', self._path, newName)
+            print('MOVING PATH', self._path, newName, file=open("/home/kcii/backup/BackupHub.log","a+"))
             shutil.move(self._path, newName)
         elif self._overwrite and os.path.exists(self._path):
-            print('REMOVING PATH', self._path)
+            print('REMOVING PATH', self._path, file=open("/home/kcii/backup/BackupHub.log","a+"))
             shutil.rmtree(self._path)
         else:
             assert not os.path.exists(self._path), ('ERROR: the supplied path '
@@ -163,7 +163,7 @@ class GitBareMirror:
         cmd = subprocess.Popen('git clone --mirror ' + str(self._origin_url)
                 + ' .', shell=True, stdout=subprocess.PIPE)
         cmd.wait()
-        print('SUCCESS (new mirror)')
+        print('SUCCESS (new mirror)', file=open("/home/kcii/backup/BackupHub.log","a+"))
 
 if __name__ == '__main__':
 
@@ -197,7 +197,7 @@ if __name__ == '__main__':
     options, args = parser.parse_args(sys.argv)
 
     localtime = time.asctime( time.localtime(time.time()) )
-    print("BackupHub Start:", localtime)
+    print("BackupHub Start:", localtime, file=open("/home/kcii/backup/BackupHub.log","a+"))
 
     assert options.token is not None
 
@@ -209,7 +209,7 @@ if __name__ == '__main__':
 
     # Check for existing backup directory and make one if it doesn't exist.
     if not os.path.isdir(options.backupPath):
-        print('The specified backup path doesn\'t exist.')
+        print('The specified backup path doesn\'t exist.', file=open("/home/kcii/backup/BackupHub.log","a+"))
         sys.exit(1)
 
     # Get the repository info from the git web api.
@@ -219,19 +219,19 @@ if __name__ == '__main__':
         webapi = GitLabAPI(options.token, options.website)
 
     # Display whats going on as the repos get either updated or newly mirrored.
-    print('Repository:')
+    print('Repository:', file=open("/home/kcii/backup/BackupHub.log","a+"))
     for i in range(webapi.numProjects()):
         try:
             curPath = os.path.join(options.backupPath, webapi.projectPath(i))
             curURL = webapi.projectURL(i)
-            print('\nSyncing: ', curURL, curPath)
+            print('\nSyncing: ', curURL, curPath, file=open("/home/kcii/backup/BackupHub.log","a+"))
             repo = GitBareMirror(curPath, curURL, overwrite=options.overwrite,
                     moveAside=options.moveAside)
         except Exception as err:
             if options.ignoreErrors:
-                print(err)
+                print(err, file=open("/home/kcii/backup/BackupHub.log","a+"))
             else:
                 raise
 
     localtime = time.asctime( time.localtime(time.time()) )
-    print("BackupHub Finished:", localtime)
+    print("BackupHub Finished:", localtime, file=open("/home/kcii/backup/BackupHub.log","a+"))
