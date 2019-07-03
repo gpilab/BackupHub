@@ -48,7 +48,7 @@ class GitLabAPI(GitWebsiteTypeAPI):
         self._gl.auth()
 
         # list all projects
-        self._projects = self._gl.projects.list(membership=True)
+        self._projects = self._gl.projects.list(membership=True,per_page=100)
 
     def numProjects(self):
         return len(self._projects)
